@@ -26,3 +26,6 @@
 *.exe
 *.out
 *.app
+*.opensdf
+*.tlog
+MediumDifficultyCpp/MediumDifficultyCpp/Debug/
