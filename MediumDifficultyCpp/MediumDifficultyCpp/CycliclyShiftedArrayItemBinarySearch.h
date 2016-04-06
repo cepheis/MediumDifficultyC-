@@ -27,7 +27,11 @@ public:
 					unshifted[i] = my_arr[index++];
 					index %= my_arr.size();
 				}
-				return std::binary_search(unshifted.begin(), unshifted.end(), value);
+				return regular_binary_search(unshifted, 0, unshifted.size() - 1, value);
+			}
+			case 1:
+			{
+				return shifted_binary_search(my_arr, 0, my_arr.size() - 1, value);
 			}
 			default:
 				break;
@@ -36,6 +40,57 @@ public:
 	}
 
 private:
+
+	bool regular_binary_search(std::vector<T> arr, int begin, int end,T value)
+	{
+		int mid = (begin + end) / 2;
+		if (arr[mid] == value)
+		{
+			return true;
+		}
+		
+		if (begin != end)
+		{
+			if (value < arr[mid])
+				return regular_binary_search(arr, begin, mid, value);
+			return regular_binary_search(arr, mid+1, end, value);
+		}
+		return false;
+	}
+
+	bool shifted_binary_search(std::vector<T> arr, int begin, int end, T value)
+	{
+		int mid = (begin + end) / 2;
+		if (arr[mid] == value)
+		{
+			return true;
+		}
+
+		if (begin != end)
+		{
+			if (value < arr[mid])
+			{
+				if (arr[begin] <= arr[mid])
+				{
+					if (arr[begin] <= value)
+						return regular_binary_search(arr, begin, mid, value);
+					return shifted_binary_search(arr, mid + 1, end, value);
+				}
+				return shifted_binary_search(arr, begin, mid, value);
+			}
+
+			if (arr[mid] <= arr[end])
+			{
+				if (arr[end] >= value)
+					return regular_binary_search(arr, mid + 1, end, value);
+				return shifted_binary_search(arr, begin, mid, value);
+			}
+			return shifted_binary_search(arr, mid + 1, end, value);
+		}
+		return false;
+	}
+
+
 	int getShiftNumber(std::vector<T> arr) const
 	{
 		for (int i = 0; i < arr.size() - 1;i++)
